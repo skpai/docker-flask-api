@@ -1,0 +1,33 @@
+version: '3.1'
+
+services:
+  flask-service:
+    image: flashapp # path is relative to docker-compose.yml localtion
+    restart: always
+    depends_on:
+      - db
+      - summarizer
+    ports:
+      - 5000:5000
+    environment:
+      summarizer_address: summarizer:5000
+    links:
+      - summarizer
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: wym_admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_ADDRESS: postgres:5432
+
+    ports:
+      - 5432:5432
+
+  summarizer:
+    image: summarizer
+    restart: always
+    ports:
+      - 5001:5000
